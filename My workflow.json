@@ -1,0 +1,333 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "event-planner",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "27a48387-d945-4280-86b3-91314fa2e859",
+      "name": "Webhook",
+      "webhookId": "31ec0ed6-b4b8-4663-9203-65045ab847aa"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a6ab5ad9-8e6a-4717-bd59-ba82aebce762",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "create",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8eb7a714-723f-4e09-9ad0-6d2080ddab7e",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "update",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "da151022-56f5-4388-80df-2d0722f6b6c9",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "delete",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "2e3944cc-7369-4188-9e02-429866df4e1c",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "mhaiderijaz529@gmail.com",
+          "mode": "list",
+          "cachedResultName": "mhaiderijaz529@gmail.com"
+        },
+        "start": "={{ $json.body.start }}",
+        "end": "={{ $json.body.end }}",
+        "additionalFields": {
+          "description": "={{ $json[\"body\"][\"description\"] }}",
+          "location": "={{ $json[\"body\"][\"location\"] }}",
+          "summary": "={{ $json[\"body\"][\"title\"] }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        440,
+        -120
+      ],
+      "id": "493d8eb6-783e-42ef-b1fb-423fc837ded7",
+      "name": "Create an event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "gPu4Ec6tNn6a3tkf",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "mhaiderijaz529@gmail.com",
+          "mode": "list",
+          "cachedResultName": "mhaiderijaz529@gmail.com"
+        },
+        "eventId": "{{ $json[\"body\"][\"event_id\"] }}",
+        "updateFields": {
+          "description": "={{ $json[\"body\"][\"description\"] }}",
+          "end": "={{ $json.body.start }}",
+          "location": "={{ $json[\"body\"][\"location\"] }}",
+          "start": "={{ $json.body.start }}",
+          "summary": "={{ $json[\"body\"][\"title\"] }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        440,
+        0
+      ],
+      "id": "aeeedf1e-1288-437c-90a5-f07ddf86f35c",
+      "name": "Update an event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "gPu4Ec6tNn6a3tkf",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "mhaiderijaz529@gmail.com",
+          "mode": "list",
+          "cachedResultName": "mhaiderijaz529@gmail.com"
+        },
+        "eventId": "={{ $json[\"body\"][\"event_id\"] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        440,
+        120
+      ],
+      "id": "a9e81718-139d-46b2-8ebe-65ecc3f09200",
+      "name": "Delete an event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "gPu4Ec6tNn6a3tkf",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"success\",\n  \"message\": \"Event created successfully\"\n}\n",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        660,
+        -120
+      ],
+      "id": "d405acef-f860-40fb-bede-b5be9cd3806a",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"success\",\n  \"message\": \"Event updated successfully\"\n}\n",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        660,
+        0
+      ],
+      "id": "753efc06-4f66-4f7a-b0ea-6c268578821b",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"success\",\n  \"message\": \"Event deleted successfully\"\n}\n",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        660,
+        120
+      ],
+      "id": "020ab3f3-4756-4118-a94c-5d0a71243617",
+      "name": "Respond to Webhook2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Create an event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update an event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delete an event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update an event": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete an event": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9ba1064e-2ff1-474d-8eee-62dd36d7162b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6321b1662fc1847b8d5ccfc731a13b9546994765740900e0fbd62eca32a169e5"
+  },
+  "id": "wkxZKZmqYyW5kO7v",
+  "tags": []
+}
